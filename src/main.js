@@ -167,7 +167,6 @@ function loop() {
     const timestampMs = performance.now();
     ctx.save();
     ctx.clearRect(0, 0, ui.el.canvas.width, ui.el.canvas.height);
-    ctx.drawImage(video, 0, 0, ui.el.canvas.width, ui.el.canvas.height);
 
     if (activeTracker === "hands") {
       const result = detectGestures(video, timestampMs);
