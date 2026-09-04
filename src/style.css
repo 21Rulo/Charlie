@@ -322,6 +322,12 @@ body {
   filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.4));
 }
 
+/* Se agrega/quita por JS en cada misión para poder reiniciar la animación
+   desde cero, incluso si el badge anterior seguía visible. */
+.success-badge--play img {
+  animation: badge-pop 1.2s ease forwards;
+}
+
 @keyframes badge-pop {
   0% {
     opacity: 0;

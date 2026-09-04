@@ -50,19 +50,29 @@ export function renderMission(mission, index, total) {
   el.missionDesc.textContent = mission.desc;
 }
 
+let successBadgeHideTimeout = null;
+
 export function showSuccessBadge(imgSrc, altText) {
   el.successBadgeImg.src = imgSrc;
   el.successBadgeImg.alt = altText;
   el.successBadge.hidden = false;
 
-  // Se reinicia la animación CSS (badge-pop) en cada misión.
-  el.successBadge.style.animation = "none";
+  // Se reinicia la animación (clase + reflow) en vez de reasignar
+  // style.animation, para que también funcione si el badge anterior
+  // todavía estaba visible cuando llega una nueva misión.
+  el.successBadge.classList.remove("success-badge--play");
   void el.successBadge.offsetWidth;
-  el.successBadge.style.animation = "";
+  el.successBadge.classList.add("success-badge--play");
 
-  window.setTimeout(() => {
+  // Si ya había un hide programado de una llamada anterior, se cancela para
+  // que no oculte el badge que acabamos de mostrar antes de tiempo.
+  if (successBadgeHideTimeout) {
+    clearTimeout(successBadgeHideTimeout);
+  }
+  successBadgeHideTimeout = window.setTimeout(() => {
     el.successBadge.hidden = true;
-  }, 1100);
+    successBadgeHideTimeout = null;
+  }, 1200);
 }
 
 export function blurCamera(isBlurred) {
