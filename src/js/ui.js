@@ -30,6 +30,11 @@ export function goToArScreen() {
   el.arScreen.classList.add("screen--active");
 }
 
+export function goToStartScreen() {
+  el.arScreen.classList.remove("screen--active");
+  el.startScreen.classList.add("screen--active");
+}
+
 export function renderMissionDots(missions, currentIndex) {
   el.missionDots.innerHTML = missions
     .map((_, i) => {

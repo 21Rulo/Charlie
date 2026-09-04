@@ -28,6 +28,14 @@ ui.el.giftBox.addEventListener("click", handleGiftBoxClick);
 ui.el.audioToggle.addEventListener("click", toggleAudio);
 ui.el.keepPlaying.addEventListener("click", enterSandboxMode);
 
+// El canvas sólo puede medirse contra dimensiones reales del video
+// (videoWidth/videoHeight), y esas sólo existen una vez que el propio
+// <video> las expone — no antes. Se registra una única vez, a nivel de
+// módulo, en vez de re-suscribirse en cada click del regalo.
+ui.el.webcam.addEventListener("loadedmetadata", resizeCanvasToVideo);
+ui.el.webcam.addEventListener("playing", resizeCanvasToVideo);
+window.addEventListener("resize", resizeCanvasToVideo);
+
 async function handleGiftBoxClick() {
   ui.el.giftBox.disabled = true;
 
@@ -36,25 +44,31 @@ async function handleGiftBoxClick() {
   ui.el.audio.play().catch((err) => console.warn("Audio placeholder no disponible aún:", err));
   ui.setAudioIcon(true);
 
+  // Mostramos el contenedor AR ANTES de pedir la cámara: si el <video> se
+  // asigna mientras su ancestro sigue en display:none, algunos navegadores
+  // (Chromium/Edge incluidos) no llegan a decodificar frames ni a exponer
+  // videoWidth/videoHeight, y el canvas queda a 0x0.
+  ui.goToArScreen();
+
   try {
     await startWebcam(ui.el.webcam);
   } catch (err) {
     console.error("No se pudo acceder a la cámara:", err);
+    ui.goToStartScreen();
     ui.showPermissionError();
     ui.el.giftBox.disabled = false;
     return;
   }
 
-  resizeCanvasToVideo();
-  window.addEventListener("resize", resizeCanvasToVideo);
-
-  ui.goToArScreen();
   await startMissionFlow();
 }
 
 function resizeCanvasToVideo() {
-  ui.el.canvas.width = ui.el.webcam.videoWidth || ui.el.webcam.clientWidth;
-  ui.el.canvas.height = ui.el.webcam.videoHeight || ui.el.webcam.clientHeight;
+  const { videoWidth, videoHeight } = ui.el.webcam;
+  if (!videoWidth || !videoHeight) return;
+
+  ui.el.canvas.width = videoWidth;
+  ui.el.canvas.height = videoHeight;
 }
 
 function toggleAudio() {

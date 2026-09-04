@@ -11,8 +11,20 @@ export async function startWebcam(videoEl) {
 
   videoEl.srcObject = stream;
 
+  // El atributo autoplay no siempre alcanza (p.ej. si el <video> acaba de
+  // pasar de display:none a visible): se fuerza el play() explícitamente.
+  try {
+    await videoEl.play();
+  } catch (err) {
+    console.warn("videoEl.play() explícito falló, se sigue confiando en autoplay:", err);
+  }
+
   await new Promise((resolve) => {
-    videoEl.onloadeddata = () => resolve();
+    if (videoEl.readyState >= 2) {
+      resolve();
+    } else {
+      videoEl.onloadeddata = () => resolve();
+    }
   });
 
   return stream;
