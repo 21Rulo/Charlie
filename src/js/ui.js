@@ -10,7 +10,7 @@ export const el = {
 
   missionCard: document.getElementById("mission-card"),
   missionDots: document.getElementById("mission-dots"),
-  missionStep: document.getElementById("mission-step"),
+  missionStep: document.getElementById("mission-current-text"),
   missionTitle: document.getElementById("mission-title"),
   missionDesc: document.getElementById("mission-desc"),
 
