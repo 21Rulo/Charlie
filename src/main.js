@@ -146,6 +146,7 @@ async function revealPhotocard() {
   grandFinale();
 
   window.setTimeout(() => {
+    document.getElementById('mission-card').style.display = 'none';
     ui.showPhotocardModal();
   }, 700);
 }
@@ -153,6 +154,7 @@ async function revealPhotocard() {
 async function enterSandboxMode() {
   sandboxMode = true;
   ui.hidePhotocardModal();
+  document.getElementById('mission-card').style.display = 'block';
   currentMissionIndex = 0;
   await enterMission(0);
 }
