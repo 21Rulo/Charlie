@@ -202,7 +202,7 @@ function onMissionSuccess(mission, index) {
       currentMissionIndex = index + 1;
       await enterMission(currentMissionIndex);
     }
-  }, 900);
+  }, 2600);
 }
 
 /** Dibuja `img` dentro de un rectángulo de `w`x`h` recortando el sobrante,

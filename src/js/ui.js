@@ -69,12 +69,12 @@ export function showSuccessBadge(imgSrc, textStr) {
   badge.hidden = false;
   badge.style.animation = 'none';
   void badge.offsetWidth; // Truco mágico de CSS para reiniciar animaciones
-  badge.style.animation = 'badge-pop 1.1s ease forwards';
+  badge.style.animation = 'badge-pop 2.5s ease forwards';
 
   // 4. Ocultar el badge por completo después de que termine la animación
   badgeTimeout = setTimeout(() => {
     badge.hidden = true;
-  }, 1200);
+  }, 2600);
 }
 
 export function blurCamera(isBlurred) {
