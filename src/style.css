@@ -323,13 +323,16 @@ body {
 
 .success-badge {
   position: fixed;
-  inset: 0;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   z-index: 10000;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   pointer-events: none;
+  width: 100%;
 }
 
 .success-badge[hidden] {
@@ -352,28 +355,11 @@ body {
 }
 
 @keyframes badge-pop {
-  0% {
-    opacity: 0;
-    transform: scale(0.5) rotate(-10deg);
-  }
-
-  20% {
-    opacity: 1;
-    transform: scale(1.15) rotate(4deg);
-  }
-
-  35% {
-    transform: scale(1) rotate(0deg);
-  }
-
-  80% {
-    opacity: 1;
-  }
-
-  100% {
-    opacity: 0;
-    transform: scale(1.05);
-  }
+  0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5) rotate(-10deg); }
+  20% { opacity: 1; transform: translate(-50%, -50%) scale(1.15) rotate(4deg); }
+  35% { transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+  80% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+  100% { opacity: 0; transform: translate(-50%, -50%) scale(1.05) rotate(0deg); }
 }
 
 .audio-toggle {
