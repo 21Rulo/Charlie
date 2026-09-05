@@ -142,13 +142,7 @@ function onMissionSuccess(mission, index) {
 
   window.setTimeout(async () => {
     if (isLastMission) {
-      if (sandboxMode) {
-        // En modo sandbox el ciclo de sonrisa vuelve a empezar sin modal.
-        currentMissionIndex = 0;
-        await enterMission(0);
-      } else {
-        await revealPhotocard();
-      }
+      await revealPhotocard();
     } else {
       currentMissionIndex = index + 1;
       await enterMission(currentMissionIndex);
@@ -214,10 +208,12 @@ function downloadCollage() {
 }
 
 async function enterSandboxMode() {
-  sandboxMode = true;
-  snapshots = [];
-  ui.hidePhotocardModal();
-  document.getElementById('mission-card').style.display = 'block';
+  sandboxMode = false; // Desactivamos cualquier bloqueo
+  snapshots = []; // Borramos las fotos anteriores para un nuevo collage
+  ui.hidePhotocardModal(); // Ocultamos el modal final
+  document.getElementById('mission-card').style.display = 'block'; // Devolvemos la UI de misiones a la pantalla
+
+  // Reiniciamos el flujo
   currentMissionIndex = 0;
   await enterMission(0);
 }
