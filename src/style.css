@@ -323,17 +323,17 @@ body {
 
 .success-badge {
   position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  inset: 0;
   z-index: 10000;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   pointer-events: none;
-  width: 100vw;
-  height: 100vh;
+}
+
+.success-badge[hidden] {
+  display: none !important;
 }
 
 .success-badge-text {
@@ -349,12 +349,6 @@ body {
   width: 180px;
   height: auto;
   filter: drop-shadow(0 12px 24px rgba(0, 0, 0, 0.4));
-}
-
-/* Se agrega/quita por JS en cada misión para poder reiniciar la animación
-   desde cero, incluso si el badge anterior seguía visible. */
-.success-badge--play img {
-  animation: badge-pop 1.2s ease forwards;
 }
 
 @keyframes badge-pop {

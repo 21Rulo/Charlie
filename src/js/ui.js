@@ -14,9 +14,6 @@ export const el = {
   missionTitle: document.getElementById("mission-title"),
   missionDesc: document.getElementById("mission-desc"),
 
-  successBadge: document.getElementById("success-badge"),
-  successBadgeImg: document.getElementById("success-badge-img"),
-
   audio: document.getElementById("bg-audio"),
   audioToggle: document.getElementById("audio-toggle"),
   audioToggleIcon: document.getElementById("audio-toggle-icon"),
