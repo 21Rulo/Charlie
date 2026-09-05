@@ -23,6 +23,8 @@ export const el = {
 
   modal: document.getElementById("photocard-modal"),
   keepPlaying: document.getElementById("keep-playing"),
+  downloadCollage: document.getElementById("download-collage"),
+  photocardImg: document.querySelector(".photocard__img"),
 };
 
 export function goToArScreen() {

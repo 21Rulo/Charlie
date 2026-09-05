@@ -20,6 +20,7 @@ let currentMissionIndex = 0;
 let holdTracker = null;
 let sandboxMode = false;
 let rafId = null;
+let snapshots = [];
 
 // ---------------------------------------------------------------------------
 // Arranque: click en el regalo -> permiso de cámara + audio + pantalla AR
@@ -27,6 +28,7 @@ let rafId = null;
 ui.el.giftBox.addEventListener("click", handleGiftBoxClick);
 ui.el.audioToggle.addEventListener("click", toggleAudio);
 ui.el.keepPlaying.addEventListener("click", enterSandboxMode);
+ui.el.downloadCollage.addEventListener("click", downloadCollage);
 
 // El canvas sólo puede medirse contra dimensiones reales del video
 // (videoWidth/videoHeight), y esas sólo existen una vez que el propio
@@ -114,7 +116,20 @@ async function ensureTracker(tracker) {
   activeTracker = tracker;
 }
 
+function captureSnapshot(video) {
+  const canvas = document.createElement("canvas");
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+  const ctx = canvas.getContext("2d");
+  // Mantener el efecto espejo
+  ctx.translate(canvas.width, 0);
+  ctx.scale(-1, 1);
+  ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+  return canvas.toDataURL("image/jpeg", 0.9);
+}
+
 function onMissionSuccess(mission, index) {
+  snapshots.push(captureSnapshot(ui.el.webcam));
   ui.showSuccessBadge(mission.badgeImg, `Misión completa: ${mission.title}`);
 
   if (mission.id === "peace-sign") {
@@ -141,18 +156,66 @@ function onMissionSuccess(mission, index) {
   }, 900);
 }
 
+/** Dibuja `img` dentro de un rectángulo de `w`x`h` recortando el sobrante,
+ * simulando el comportamiento de object-fit: cover. */
+function drawCover(ctx, img, x, y, w, h) {
+  const scale = Math.max(w / img.width, h / img.height);
+  const sw = w / scale;
+  const sh = h / scale;
+  const sx = (img.width - sw) / 2;
+  const sy = (img.height - sh) / 2;
+  ctx.drawImage(img, sx, sy, sw, sh, x, y, w, h);
+}
+
+function loadImage(src) {
+  return new Promise((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+async function generateCollage() {
+  const canvas = document.createElement("canvas");
+  canvas.width = 400;
+  canvas.height = 600;
+  const ctx = canvas.getContext("2d");
+
+  const cellW = 200;
+  const cellH = 300;
+  const images = await Promise.all(snapshots.slice(0, 4).map(loadImage));
+
+  images.forEach((img, i) => {
+    const col = i % 2;
+    const row = Math.floor(i / 2);
+    drawCover(ctx, img, col * cellW, row * cellH, cellW, cellH);
+  });
+
+  ui.el.photocardImg.src = canvas.toDataURL("image/jpeg", 0.9);
+}
+
 async function revealPhotocard() {
   ui.blurCamera(true);
   grandFinale();
 
-  window.setTimeout(() => {
+  window.setTimeout(async () => {
     document.getElementById('mission-card').style.display = 'none';
+    await generateCollage();
     ui.showPhotocardModal();
   }, 700);
 }
 
+function downloadCollage() {
+  const link = document.createElement("a");
+  link.href = ui.el.photocardImg.src;
+  link.download = "Cumple_Charlie.jpg";
+  link.click();
+}
+
 async function enterSandboxMode() {
   sandboxMode = true;
+  snapshots = [];
   ui.hidePhotocardModal();
   document.getElementById('mission-card').style.display = 'block';
   currentMissionIndex = 0;

@@ -499,6 +499,12 @@ body {
   opacity: 0.9;
 }
 
+.modal__actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
 .btn-primary {
   border: none;
   border-radius: 999px;
