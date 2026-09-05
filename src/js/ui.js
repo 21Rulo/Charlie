@@ -52,28 +52,31 @@ export function renderMission(mission, index, total) {
   el.missionDesc.textContent = mission.desc;
 }
 
-let successBadgeHideTimeout = null;
+let badgeTimeout = null;
 
-export function showSuccessBadge(imgSrc, altText) {
-  el.successBadgeImg.src = imgSrc;
-  el.successBadgeImg.alt = altText;
-  el.successBadge.hidden = false;
+export function showSuccessBadge(imgSrc, textStr) {
+  const badge = document.getElementById("success-badge");
+  const img = document.getElementById("success-badge-img");
+  const text = document.getElementById("success-badge-text");
 
-  // Se reinicia la animación (clase + reflow) en vez de reasignar
-  // style.animation, para que también funcione si el badge anterior
-  // todavía estaba visible cuando llega una nueva misión.
-  el.successBadge.classList.remove("success-badge--play");
-  void el.successBadge.offsetWidth;
-  el.successBadge.classList.add("success-badge--play");
+  if (!badge || !img || !text) return;
 
-  // Si ya había un hide programado de una llamada anterior, se cancela para
-  // que no oculte el badge que acabamos de mostrar antes de tiempo.
-  if (successBadgeHideTimeout) {
-    clearTimeout(successBadgeHideTimeout);
-  }
-  successBadgeHideTimeout = window.setTimeout(() => {
-    el.successBadge.hidden = true;
-    successBadgeHideTimeout = null;
+  // 1. Asignar los valores (la imagen aleatoria y el título de la misión)
+  img.src = imgSrc;
+  text.textContent = textStr;
+
+  // 2. Limpiar cualquier animación pendiente si el usuario hace gestos muy rápido
+  if (badgeTimeout) clearTimeout(badgeTimeout);
+
+  // 3. Quitar el atributo hidden y forzar un "reflow" para que la animación se reinicie desde cero
+  badge.hidden = false;
+  badge.style.animation = 'none';
+  void badge.offsetWidth; // Truco mágico de CSS para reiniciar animaciones
+  badge.style.animation = 'badge-pop 1.1s ease forwards';
+
+  // 4. Ocultar el badge por completo después de que termine la animación
+  badgeTimeout = setTimeout(() => {
+    badge.hidden = true;
   }, 1200);
 }
 
