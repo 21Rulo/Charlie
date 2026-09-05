@@ -16,7 +16,7 @@ export const MISSIONS = [
   },
   {
     id: "peace-sign",
-    title: "Peace sign",
+    title: "Señal de la paz",
     desc: "Haz la señal de la paz ✌️ con una mano",
     icon: "✌️",
     badgeImg: IMAGES.peace,
@@ -25,7 +25,7 @@ export const MISSIONS = [
   },
   {
     id: "finger-heart",
-    title: "Finger heart coreano",
+    title: "Finger heart",
     desc: "Junta la punta del pulgar y el índice como un 🫰",
     icon: "🫰",
     badgeImg: IMAGES.fingerHeart,

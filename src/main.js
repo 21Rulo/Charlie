@@ -1,4 +1,5 @@
 import "./style.css";
+import html2canvas from 'html2canvas';
 import { DrawingUtils, GestureRecognizer, FaceLandmarker } from "@mediapipe/tasks-vision";
 
 import { startWebcam } from "./js/camera.js";
@@ -28,7 +29,31 @@ let snapshots = [];
 ui.el.giftBox.addEventListener("click", handleGiftBoxClick);
 ui.el.audioToggle.addEventListener("click", toggleAudio);
 ui.el.keepPlaying.addEventListener("click", enterSandboxMode);
-ui.el.downloadCollage.addEventListener("click", downloadCollage);
+
+document.getElementById('download-collage').addEventListener('click', async () => {
+  const cardElement = document.getElementById('photocard');
+
+  // Ocultar temporalmente el efecto holográfico si causa problemas de renderizado
+  const foil = cardElement.querySelector('.photocard__foil');
+  if(foil) foil.style.display = 'none';
+
+  try {
+    const canvas = await html2canvas(cardElement, {
+      scale: 2, // Mayor calidad para que el texto no se pixele
+      useCORS: true,
+      backgroundColor: null
+    });
+
+    const link = document.createElement('a');
+    link.download = 'Feliz_Cumple_Charlie.png';
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  } catch (err) {
+    console.error('Error al guardar la tarjeta:', err);
+  } finally {
+    if(foil) foil.style.display = 'block';
+  }
+});
 
 // El canvas sólo puede medirse contra dimensiones reales del video
 // (videoWidth/videoHeight), y esas sólo existen una vez que el propio
@@ -198,13 +223,6 @@ async function revealPhotocard() {
     await generateCollage();
     ui.showPhotocardModal();
   }, 700);
-}
-
-function downloadCollage() {
-  const link = document.createElement("a");
-  link.href = ui.el.photocardImg.src;
-  link.download = "Cumple_Charlie.jpg";
-  link.click();
 }
 
 async function enterSandboxMode() {
