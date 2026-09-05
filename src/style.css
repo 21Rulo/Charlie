@@ -365,9 +365,9 @@ body {
 .audio-toggle {
   position: absolute;
   top: max(20px, env(safe-area-inset-top));
-  bottom: auto;
   right: 20px;
-  z-index: 20;
+  bottom: auto;
+  z-index: 100000;
   width: 52px;
   height: 52px;
   border-radius: 50%;

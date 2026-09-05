@@ -294,24 +294,11 @@ function loop() {
 }
 
 function drawHands(result) {
-  if (!result?.landmarks) return;
-  for (const landmarks of result.landmarks) {
-    drawingUtils.drawConnectors(landmarks, GestureRecognizer.HAND_CONNECTIONS, {
-      color: "#A3B18A",
-      lineWidth: 3,
-    });
-    drawingUtils.drawLandmarks(landmarks, { color: "#3A5A40", radius: 3 });
-  }
+  // Silenciado: La detección funciona, pero ya no dibujamos los nodos en pantalla
 }
 
 function drawFace(result) {
-  if (!result?.faceLandmarks) return;
-  for (const landmarks of result.faceLandmarks) {
-    drawingUtils.drawConnectors(landmarks, FaceLandmarker.FACE_LANDMARKS_CONTOURS, {
-      color: "#588157",
-      lineWidth: 1,
-    });
-  }
+  // Silenciado: La detección funciona, pero ya no dibujamos la malla en pantalla
 }
 
 window.addEventListener("beforeunload", () => {
