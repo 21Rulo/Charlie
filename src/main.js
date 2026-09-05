@@ -11,6 +11,7 @@ import {
 import { initFaceLandmarker, detectFace, closeFaceLandmarker } from "./js/face.js";
 import { MISSIONS, createHoldTracker } from "./js/missions.js";
 import { burst, greenRain, grandFinale } from "./js/confetti.js";
+import { getRandomItem } from "./js/items.js";
 import * as ui from "./js/ui.js";
 
 const ctx = ui.el.canvas.getContext("2d");
@@ -76,6 +77,7 @@ async function handleGiftBoxClick() {
   // (Chromium/Edge incluidos) no llegan a decodificar frames ni a exponer
   // videoWidth/videoHeight, y el canvas queda a 0x0.
   ui.goToArScreen();
+  startSnow();
 
   try {
     await startWebcam(ui.el.webcam);
@@ -88,6 +90,34 @@ async function handleGiftBoxClick() {
   }
 
   await startMissionFlow();
+}
+
+function startSnow() {
+  const container = document.getElementById('snow-container');
+  if (!container) return;
+
+  // Crea un objeto cada 1.2 segundos (evita saturación)
+  setInterval(() => {
+    const img = document.createElement('img');
+    img.src = getRandomItem();
+    img.className = 'snow-item';
+
+    // Tamaño aleatorio entre 35px y 70px
+    const size = Math.random() * 35 + 35;
+    img.style.width = `${size}px`;
+    img.style.height = 'auto';
+
+    // Posición horizontal aleatoria
+    img.style.left = `${Math.random() * 90}vw`;
+
+    // Velocidad de caída muy lenta (entre 10 y 16 segundos)
+    img.style.animationDuration = `${Math.random() * 6 + 10}s`;
+
+    container.appendChild(img);
+
+    // Borrar el elemento del DOM cuando termina su animación
+    setTimeout(() => img.remove(), 17000);
+  }, 1200);
 }
 
 function resizeCanvasToVideo() {
@@ -155,7 +185,7 @@ function captureSnapshot(video) {
 
 function onMissionSuccess(mission, index) {
   snapshots.push(captureSnapshot(ui.el.webcam));
-  ui.showSuccessBadge(mission.badgeImg, `Misión completa: ${mission.title}`);
+  ui.showSuccessBadge(getRandomItem(), `Misión completa: ${mission.title}`);
 
   if (mission.id === "peace-sign") {
     greenRain();

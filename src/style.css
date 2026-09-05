@@ -221,6 +221,25 @@ body {
   z-index: 2;
 }
 
+.snow-container {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.snow-item {
+  position: absolute;
+  top: -100px;
+  opacity: 0.65; /* Ligeramente transparente para no saturar */
+  animation: fall linear forwards;
+}
+
+@keyframes fall {
+  to { transform: translateY(120vh) rotate(360deg); }
+}
+
 .scan-overlay {
   position: absolute;
   inset: 0;
